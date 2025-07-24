@@ -5,7 +5,7 @@ import {
   ManyToMany,
   JoinTable,
 } from 'typeorm';
-import { Employe } from 'src/employe/entities/employe.entity/employe.entity';
+import { Employe } from 'src/employe/entities/employe.entity';
 
 @Entity()
 export class Departement {

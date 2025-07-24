@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Employe } from 'src/employe/entities/employe.entity/employe.entity';
-import { CreateEmployeDto } from 'src/employe/dto/create-employe.dto/create-employe.dto';
-import { UpdateEmployeDto } from 'src/employe/dto/update-employe.dto/update-employe.dto';
+import { Employe } from 'src/employe/entities/employe.entity';
+import { CreateEmployeDto } from 'src/employe/dto/create-employe.dto';
+import { UpdateEmployeDto } from 'src/employe/dto/update-employe.dto';
 
 @Injectable()
 export class EmployeService {
@@ -20,15 +20,15 @@ export class EmployeService {
     return this.employeRepository.find();
   }
 
-  findOne(email: string) {
-    return this.employeRepository.findOneBy({ email });
+  async findOne(email: string) {
+    return await this.employeRepository.findOneBy({ email });
   }
 
-  update(email: string, dto: UpdateEmployeDto) {
-    return this.employeRepository.update({ email }, dto);
+  async update(email: string, dto: UpdateEmployeDto) {
+    return await this.employeRepository.update({ email }, dto);
   }
 
-  remove(email: string) {
-    return this.employeRepository.delete({ email });
+  async remove(email: string) {
+    return await this.employeRepository.delete({ email });
   }
 }

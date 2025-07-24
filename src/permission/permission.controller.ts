@@ -1,15 +1,13 @@
+// eslint-disable-next-line prettier/prettier
 import {
   Controller,
   Post,
   Get,
   Param,
-  Patch,
-  Delete,
   Body,
 } from '@nestjs/common';
 import { PermissionService } from './permission.service';
-import { CreatePermissionDto } from 'src/permission/dto/create-permission.dto/create-permission.dto';
-import { UpdatePermissionDto } from 'src/permission/dto/update-permission.dto/update-permission.dto';
+import { CreatePermissionDto } from 'src/permission/dto/create-permission.dto';
 
 @Controller('permission')
 export class PermissionController {
@@ -28,15 +26,5 @@ export class PermissionController {
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.service.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() dto: UpdatePermissionDto) {
-    return this.service.update(+id, dto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.service.remove(+id);
   }
 }

@@ -8,8 +8,8 @@ import {
   Delete,
 } from '@nestjs/common';
 import { EmployeService } from './employe.service';
-import { CreateEmployeDto } from 'src/employe/dto/create-employe.dto/create-employe.dto';
-import { UpdateEmployeDto } from 'src/employe/dto/update-employe.dto/update-employe.dto';
+import { CreateEmployeDto } from 'src/employe/dto/create-employe.dto';
+import { UpdateEmployeDto } from 'src/employe/dto/update-employe.dto';
 @Controller('employe')
 export class EmployeController {
   constructor(private readonly employeService: EmployeService) {}
@@ -25,8 +25,8 @@ export class EmployeController {
   }
 
   @Get(':email')
-  findOne(@Param('email') email: string) {
-    return this.employeService.findOne(email);
+  async findOne(@Param('email') email: string) {
+    return await this.employeService.findOne(email);
   }
 
   @Patch(':email')

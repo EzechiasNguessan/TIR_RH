@@ -8,8 +8,8 @@ import {
   Body,
 } from '@nestjs/common';
 import { PresenceService } from './presence.service';
-import { CreatePresenceDto } from 'src/presence/dto/create-presence.dto/create-presence.dto';
-import { UpdatePresenceDto } from 'src/presence/dto/update-presence.dto/update-presence.dto';
+import { CreatePresenceDto } from 'src/presence/dto/create-presence.dto';
+import { UpdatePresenceDto } from 'src/presence/dto/update-presence.dto';
 
 @Controller('presence')
 export class PresenceController {

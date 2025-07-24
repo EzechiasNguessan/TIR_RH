@@ -1,53 +1,34 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Employe } from 'src/employe/entities/employe.entity';
 import { LoginDto } from './dto/login.dto';
-import { RefreshDto } from './dto/refresh.dto';
 
 @Injectable()
 export class AuthService {
-  constructor(private jwtService: JwtService) {}
+  constructor(
+    private readonly jwtService: JwtService,
+    @InjectRepository(Employe)
+    private readonly employeRepository: Repository<Employe>,
+  ) {}
 
-  login(dto: LoginDto) {
-    // TODO : vérification réelle dans la base
-    if (
-      dto.email !== 'test@example.com' ||
-      dto.mot_de_passe !== 'password123'
-    ) {
-      throw new UnauthorizedException('Invalid credentials');
+  async login(dto: LoginDto) {
+    // Vérifier si l'employé existe
+    let employe = await this.employeRepository.findOne({
+      where: { email: dto.email },
+    });
+
+    // Créer automatiquement s'il n'existe pas
+    if (!employe) {
+      employe = this.employeRepository.create({ email: dto.email });
+      await this.employeRepository.save(employe);
     }
 
-    const payload = { sub: 'user-id', email: dto.email, role: 'RH' };
-
+    // Génération du token JWT
+    const payload = { email: employe.email, sub: employe.id };
     return {
-      token: this.jwtService.sign(payload),
-      user: {
-        email: dto.email,
-        role: 'RH',
-        employe_email: 'employe@example.com',
-      },
+      access_token: this.jwtService.sign(payload),
     };
-  }
-
-  refresh(dto: RefreshDto) {
-    try {
-      interface JwtPayload {
-        sub: string;
-        email: string;
-        role: string;
-        [key: string]: any;
-      }
-      const decoded = this.jwtService.verify<JwtPayload>(dto.refresh_token);
-      const payload = {
-        sub: decoded?.sub,
-        email: decoded?.email,
-        role: decoded?.role,
-      };
-
-      return {
-        token: this.jwtService.sign(payload),
-      };
-    } catch {
-      throw new UnauthorizedException('Invalid refresh token');
-    }
   }
 }

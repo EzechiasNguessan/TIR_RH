@@ -8,6 +8,7 @@ export const databaseConfig: TypeOrmModuleOptions = {
   username: 'postgres',
   password: '123456',
   database: 'RH_DB',
-  entities: [join(__dirname, '..', '', '*.entity{.ts,.js}')],
+  synchronize: true,
+  entities: ['dist/**/*.entity{.ts,.js}'],
   migrations: [join(__dirname, 'migrations', '', '*{.ts,.js}')],
 };

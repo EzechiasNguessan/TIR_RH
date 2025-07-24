@@ -2,8 +2,8 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Presence } from 'src/presence/entities/presence.entity/presence.entity';
-import { CreatePresenceDto } from 'src/presence/dto/create-presence.dto/create-presence.dto';
-import { UpdatePresenceDto } from 'src/presence/dto/update-presence.dto/update-presence.dto';
+import { CreatePresenceDto } from 'src/presence/dto/create-presence.dto';
+import { UpdatePresenceDto } from 'src/presence/dto/update-presence.dto';
 @Injectable()
 export class PresenceService {
   constructor(
