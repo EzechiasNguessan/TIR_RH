@@ -12,8 +12,8 @@ export class EmployeService {
     private employeRepository: Repository<Employe>,
   ) {}
 
-  create(dto: CreateEmployeDto) {
-    return this.employeRepository.save(dto);
+  async create(dto: CreateEmployeDto) {
+    return await this.employeRepository.save(dto);
   }
 
   findAll() {

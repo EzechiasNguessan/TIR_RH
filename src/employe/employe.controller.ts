@@ -15,8 +15,8 @@ export class EmployeController {
   constructor(private readonly employeService: EmployeService) {}
 
   @Post()
-  create(@Body() dto: CreateEmployeDto) {
-    return this.employeService.create(dto);
+  async create(@Body() dto: CreateEmployeDto) {
+    return await this.employeService.create(dto);
   }
 
   @Get()

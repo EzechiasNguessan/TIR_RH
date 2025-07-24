@@ -35,9 +35,4 @@ export class DepartementService {
     Object.assign(departement, dto);
     return this.departementRepository.save(departement);
   }
-
-  async remove(id: number) {
-    const departement = await this.findOne(id);
-    return this.departementRepository.remove(departement);
-  }
 }
