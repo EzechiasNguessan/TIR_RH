@@ -1,8 +1,11 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToMany } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
 import { Departement } from 'src/departement/entities/departement.entity';
 
 @Entity()
 export class Employe {
+  @Column({ type: 'boolean', default: false })
+  isSuperieur: boolean;
+
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -15,20 +18,24 @@ export class Employe {
   @Column()
   prenom: string;
 
+  @Column({ select: false }) // exclu par défaut dans les requêtes
+  password: string;
+
   @Column({ default: true })
   actif: boolean;
 
-  @Column({ nullable: true })
-  poste?: string;
+  @Column()
+  poste: string;
 
-  @Column({ type: 'date', default: () => 'CURRENT_DATE' })
+  @Column({ type: 'date' })
   date_embauche: Date;
 
-  @ManyToMany(() => Departement, (departement) => departement.employes, {
+  @Column({ nullable: true })
+  superieur_email: string;
+
+  @ManyToOne(() => Departement, (departement) => departement.employes, {
     nullable: true,
   })
-  departements?: Departement[];
-
-  @Column({ nullable: true })
-  superieur_email?: string;
+  departement?: Departement;
+  role: any;
 }

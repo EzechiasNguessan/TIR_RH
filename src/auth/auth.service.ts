@@ -1,34 +1,48 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { Employe } from 'src/employe/entities/employe.entity';
+import { EmployeService } from 'src/employe/employe.service';
+import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthService {
   constructor(
+    private readonly employeService: EmployeService,
     private readonly jwtService: JwtService,
-    @InjectRepository(Employe)
-    private readonly employeRepository: Repository<Employe>,
   ) {}
 
-  async login(dto: LoginDto) {
-    // Vérifier si l'employé existe
-    let employe = await this.employeRepository.findOne({
-      where: { email: dto.email },
-    });
+  async register(dto: RegisterDto) {
+    return this.employeService.create(dto);
+  }
 
-    // Créer automatiquement s'il n'existe pas
+  async login(dto: LoginDto) {
+    const employe = await this.employeService.findOne(dto.email);
     if (!employe) {
-      employe = this.employeRepository.create({ email: dto.email });
-      await this.employeRepository.save(employe);
+      throw new UnauthorizedException('Email ou mot de passe invalide');
     }
 
-    // Génération du token JWT
-    const payload = { email: employe.email, sub: employe.id };
-    return {
-      access_token: this.jwtService.sign(payload),
-    };
+    const passwordMatch = await bcrypt.compare(dto.password, employe.password);
+    if (!passwordMatch) {
+      throw new UnauthorizedException('Email ou mot de passe invalide');
+    }
+
+    const payload = { sub: employe.id, email: employe.email };
+    const token = await this.jwtService.signAsync(payload);
+
+    return { access_token: token };
+  }
+  async validateUser(email: string, password: string) {
+    const employe = await this.employeService.findOne(email);
+    if (!employe) {
+      return null;
+    }
+
+    const passwordMatch = await bcrypt.compare(password, employe.password);
+    if (!passwordMatch) {
+      return null;
+    }
+
+    return { id: employe.id, email: employe.email };
   }
 }

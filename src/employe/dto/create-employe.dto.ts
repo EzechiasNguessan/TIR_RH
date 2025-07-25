@@ -1,7 +1,20 @@
-import { IsEmail, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import {
+  IsEmail,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  IsBoolean,
+  IsDateString,
+  MinLength,
+} from 'class-validator';
 
 export class CreateEmployeDto {
+  @IsOptional()
+  @IsBoolean()
+  isSuperieur?: boolean;
+
   @IsEmail()
+  @IsNotEmpty()
   email: string;
 
   @IsString()
@@ -12,18 +25,20 @@ export class CreateEmployeDto {
   @IsNotEmpty()
   prenom: string;
 
-  @IsOptional()
   @IsString()
-  matricule?: string;
+  @MinLength(6) // Minimum 6 caractères pour plus de sécurité
+  @IsNotEmpty()
+  password: string;
 
   @IsOptional()
   @IsString()
   poste?: string;
 
   @IsOptional()
-  @IsEmail()
-  superieur_email?: string;
+  @IsDateString()
+  date_embauche?: Date;
 
   @IsOptional()
-  date_embauche?: Date;
+  @IsEmail()
+  superieur_email?: string;
 }

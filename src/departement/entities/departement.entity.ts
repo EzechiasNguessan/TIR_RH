@@ -1,10 +1,4 @@
-import {
-  Column,
-  Entity,
-  PrimaryGeneratedColumn,
-  ManyToMany,
-  JoinTable,
-} from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 import { Employe } from 'src/employe/entities/employe.entity';
 
 @Entity()
@@ -18,7 +12,6 @@ export class Departement {
   @Column({ nullable: true })
   description: string;
 
-  @ManyToMany(() => Employe, (employe) => employe.departements)
-  @JoinTable()
+  @OneToMany(() => Employe, (employe) => employe.departement)
   employes: Employe[];
 }
