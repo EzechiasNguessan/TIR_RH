@@ -1,29 +1,19 @@
-import { Controller, Get, Post, Body, Patch, Param } from '@nestjs/common';
+import { Controller, Get, Post } from '@nestjs/common';
 import { DepartementService } from './departement.service';
-import { CreateDepartementDto } from './dto/create-departement.dto';
-import { UpdateDepartementDto } from './dto/update-departement.dto';
 
 @Controller('departements')
 export class DepartementController {
-  constructor(private readonly service: DepartementService) {}
+  constructor(private readonly departementService: DepartementService) {}
 
-  @Post()
-  create(@Body() dto: CreateDepartementDto) {
-    return this.service.create(dto);
+  // Récupérer toute la hiérarchie
+  @Get('tree')
+  async getTree() {
+    return await this.departementService.getTree();
   }
 
-  @Get()
-  findAll() {
-    return this.service.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.service.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() dto: UpdateDepartementDto) {
-    return this.service.update(+id, dto);
+  // Créer la hiérarchie de base (seed)
+  @Post('seed')
+  async seed() {
+    return await this.departementService.seed();
   }
 }

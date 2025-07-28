@@ -1,4 +1,4 @@
-import { IsDateString, IsInt, IsString } from 'class-validator';
+import { IsDateString, IsEmail, IsInt, IsString } from 'class-validator';
 
 export class CreatePermissionDto {
   @IsDateString()
@@ -12,4 +12,7 @@ export class CreatePermissionDto {
 
   @IsString()
   motif: string;
+
+  @IsEmail()
+  commentaire: string;
 }

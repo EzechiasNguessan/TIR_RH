@@ -32,6 +32,7 @@ export class AuthService {
 
     return { access_token: token };
   }
+
   async validateUser(email: string, password: string) {
     const employe = await this.employeService.findOne(email);
     if (!employe) {
