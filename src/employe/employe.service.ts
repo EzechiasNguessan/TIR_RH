@@ -1,43 +1,66 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Employe } from './entities/employe.entity';
+import { Departement } from '../departement/entities/departement.entity';
 import { CreateEmployeDto } from './dto/create-employe.dto';
 import { UpdateEmployeDto } from './dto/update-employe.dto';
-import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class EmployeService {
   constructor(
     @InjectRepository(Employe)
     private readonly employeRepository: Repository<Employe>,
+
+    @InjectRepository(Departement)
+    private readonly departementRepository: Repository<Departement>,
   ) {}
 
+  /** Création d'un employé */
   async create(dto: CreateEmployeDto) {
-    const hash = await bcrypt.hash(dto.password, 10);
-    const employe = this.employeRepository.create({
-      ...dto,
-      password: hash,
-    });
-    return this.employeRepository.save(employe);
+    return await this.employeRepository.save(dto);
   }
 
+  /** Récupération de tous les employés */
   findAll() {
-    return this.employeRepository.find();
+    return this.employeRepository.find({ relations: ['departement'] });
   }
 
+  /** Récupération d'un employé par email */
   async findOne(email: string) {
-    return this.employeRepository.findOne({
+    const employe = await this.employeRepository.findOne({
       where: { email },
-      select: ['id', 'email', 'nom', 'prenom', 'password'],
+      relations: ['departement'],
     });
+    if (!employe)
+      throw new NotFoundException(`Employé avec email ${email} introuvable`);
+    return employe;
   }
 
+  /** Mise à jour d'un employé */
   async update(email: string, dto: UpdateEmployeDto) {
-    return this.employeRepository.update({ email }, dto);
+    const employe = await this.findOne(email);
+    Object.assign(employe, dto);
+    return await this.employeRepository.save(employe);
   }
 
+  /** Suppression d'un employé */
   async remove(email: string) {
-    return this.employeRepository.delete({ email });
+    const employe = await this.findOne(email);
+    await this.employeRepository.remove(employe);
+    return { message: 'Employé supprimé avec succès' };
+  }
+
+  /** Assigner un département à un employé */
+  async assignDepartement(email: string, departementId: number) {
+    const employe = await this.findOne(email);
+    const departement = await this.departementRepository.findOne({
+      where: { id: departementId },
+    });
+
+    if (!departement) throw new NotFoundException('Département non trouvé');
+
+    employe.departement = departement;
+    return this.employeRepository.save(employe);
   }
 }

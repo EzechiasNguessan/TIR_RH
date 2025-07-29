@@ -6,6 +6,7 @@ import {
   IsBoolean,
   IsDateString,
   MinLength,
+  MaxLength,
 } from 'class-validator';
 
 export class CreateEmployeDto {
@@ -27,6 +28,7 @@ export class CreateEmployeDto {
 
   @IsString()
   @MinLength(6) // Minimum 6 caractères pour plus de sécurité
+  @MaxLength(15) // Maximum 15 caractères
   @IsNotEmpty()
   password: string;
 

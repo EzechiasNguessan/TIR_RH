@@ -10,17 +10,17 @@ export class Employe {
   nom: string;
 
   @Column({ nullable: true })
-  prenom: string; // ajouté
+  prenom: string;
 
   @Column({ unique: true })
   email: string;
 
   @Column()
-  password: string; // ajouté
+  password: string;
 
   @ManyToOne(() => Departement, (departement) => departement.employes, {
     nullable: true,
     onDelete: 'SET NULL',
   })
-  departement?: Departement;
+  departement: Departement;
 }
