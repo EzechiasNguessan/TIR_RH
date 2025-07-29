@@ -72,6 +72,18 @@ export class AllExceptionsFilter implements ExceptionFilter {
         userMessage =
           'Une erreur technique est survenue, veuillez réessayer plus tard.';
         break;
+      case HttpStatus.CONFLICT:
+        userMessage =
+          'Un conflit est survenu, veuillez vérifier les données fournies.';
+        break;
+      case HttpStatus.UNPROCESSABLE_ENTITY:
+        userMessage =
+          'Les données fournies ne peuvent pas être traitées, veuillez vérifier votre saisie.';
+        break;
+      case HttpStatus.SERVICE_UNAVAILABLE:
+        userMessage =
+          'Le service est temporairement indisponible, veuillez réessayer plus tard.';
+        break;
     }
 
     const errorResponse: ErrorResponse = {
