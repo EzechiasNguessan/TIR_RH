@@ -70,7 +70,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
         break;
       case HttpStatus.INTERNAL_SERVER_ERROR:
         userMessage =
-          'Une erreur technique est survenue, veuillez réessayer plus tard.';
+          'Une erreur technique est survenue, il semble que cet utilisateur est déjà enregistré (EMAIL).';
         break;
       case HttpStatus.CONFLICT:
         userMessage =
